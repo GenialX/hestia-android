@@ -19,6 +19,7 @@ public class ServerThread extends Thread {
             if (ServerThread.cmds.size() > 0) {
                 String cmd = ServerThread.cmds.firstElement();
                 Server.getInstance().writeLine(cmd);
+                ServerThread.cmds.removeElementAt(0);
             }
 
             try {

@@ -15,7 +15,7 @@ public class Location implements LocationListener {
     public void onLocationChanged(android.location.Location location) {
         Log.d("Location", "receive onLocationChanged event, the location info:" + location.toString());
         String cmd = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1000,\"lat\":"
-                + location.getLongitude() + ",\"lnt\":" + location.getLatitude() + ",\"token\":\"aaabbbccc\"}}";
+                + location.getLatitude() + ",\"lnt\":" + location.getLongitude() + ",\"token\":\"aaabbbccc\"}}";
         Log.d("Location", "receive onLocationChanged event, the location info:" + cmd);
         ServerThread.pushCmd(cmd);
     }
