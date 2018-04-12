@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 String cmd = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1000,\"lat\":"
-                        + aMapLocation.getLatitude() + ",\"lnt\":" + aMapLocation.getLongitude() + ",\"token\":\"aaabbbccc\"}}";
+                        + aMapLocation.getLongitude() + ",\"lnt\":" + aMapLocation.getLatitude() + ",\"token\":\"aaabbbccc\"}}";
                 Log.d("Location", "receive onLocationChanged event, the location info:" + cmd + " " + aMapLocation.toString());
                 ServerThread.pushCmd(cmd);
             }
