@@ -8,13 +8,12 @@ import java.util.Vector;
  */
 
 public class ServerThread extends Thread {
-    private static Vector<String> cmds;
+    private static Vector<String> cmds = new Vector<>();
     private boolean doRun = false;
 
     @Override
     public void run() {
         doRun = true;
-        ServerThread.cmds = new Vector<String>();
         while (doRun) {
             if (ServerThread.cmds.size() > 0) {
                 String cmd = ServerThread.cmds.firstElement();
@@ -31,6 +30,6 @@ public class ServerThread extends Thread {
     }
 
     public static void pushCmd(String cmd) {
-       ServerThread.cmds.add(cmd) ;
+       ServerThread.cmds.add(cmd);
     }
 }
