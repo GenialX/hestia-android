@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // Server Thread
         new ServerThread().start();
 
+        // Location
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setInterval(2000);
+        mLocationOption.setInterval(60000);
 
         if(null != mLocationClient){
             mLocationClient.setLocationOption(mLocationOption);
