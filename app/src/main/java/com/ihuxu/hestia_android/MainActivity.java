@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setInterval(2000);
-        mLocationOption.setNeedAddress(true);
-        mLocationOption.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.Transport);
 
         if(null != mLocationClient){
             mLocationClient.setLocationOption(mLocationOption);
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         Notification.Builder builder = null;
         Notification notification = null;
         if(android.os.Build.VERSION.SDK_INT >= 26) {
-            //Android O上对Notification进行了修改，如果设置的targetSDKVersion>=26建议使用此种方式创建通知栏
             if (null == notificationManager) {
                 notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             }
@@ -101,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
             if(!isCreateChannel) {
                 NotificationChannel notificationChannel = new NotificationChannel(channelId,
                         NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-                notificationChannel.enableLights(true);//是否在桌面icon右上角展示小圆点
-                notificationChannel.setLightColor(Color.BLUE); //小圆点颜色
-                notificationChannel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.setShowBadge(true);
                 notificationManager.createNotificationChannel(notificationChannel);
                 isCreateChannel = true;
             }
@@ -112,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
             builder = new Notification.Builder(getApplicationContext());
         }
         builder.setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Hestia")
-                .setContentText("正在后台运行")
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.notification_desc))
                 .setWhen(System.currentTimeMillis());
 
         if (android.os.Build.VERSION.SDK_INT >= 16) {
