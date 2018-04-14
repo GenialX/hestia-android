@@ -1,5 +1,7 @@
 package com.ihuxu.hestia_android.libs.server;
 
+import android.util.Log;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,12 +13,13 @@ import java.net.Socket;
  */
 
 public class Server {
-    private static Server instance;
     private Socket socket;
     private BufferedWriter bufferedWriter;
+    private static Server instance;
 
-    private  Server() {
+    private Server() {
         try {
+            Log.d("Server", "Server construct");
             this.socket = new Socket("118.190.66.157", 1724);
             OutputStream outputStream = this.socket.getOutputStream();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
@@ -28,10 +31,10 @@ public class Server {
     }
 
     public static Server getInstance() {
-       if (instance == null) {
-           instance = new Server();
-       }
-       return instance;
+        if (Server.instance == null) {
+            Server.instance = new Server();
+        }
+       return Server.instance;
     }
 
     public void writeLine(String line) {
@@ -45,7 +48,6 @@ public class Server {
             try {
                 this.bufferedWriter.write(line);
                 this.bufferedWriter.newLine();
-                this.bufferedWriter.flush();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

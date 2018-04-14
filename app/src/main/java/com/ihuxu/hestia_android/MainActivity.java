@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.ihuxu.hestia_android.libs.server.MessageQueue;
 import com.ihuxu.hestia_android.libs.server.ServerThread;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,17 +63,17 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Server Thread
+        // Server Thread to send location to server
         new ServerThread().start();
 
         // Location
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                String cmd = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1000,\"lat\":"
+                String message = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1000,\"lat\":"
                         + aMapLocation.getLatitude() + ",\"lnt\":" + aMapLocation.getLongitude() + ",\"token\":\"aaabbbccc\"}}";
-                Log.d("Location", "receive onLocationChanged event, the location info:" + cmd + " " + aMapLocation.toString());
-                ServerThread.pushCmd(cmd);
+                Log.i("AMapLocationListener", "receive onLocationChanged event, the location info:" + message + " " + aMapLocation.toString());
+                MessageQueue.pushMessage(message);
             }
         };
         mLocationClient = new AMapLocationClient(getApplicationContext());
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setInterval(60000);
+        mLocationOption.setInterval(2000);
 
         if(null != mLocationClient){
             mLocationClient.setLocationOption(mLocationOption);
@@ -86,7 +89,37 @@ public class MainActivity extends AppCompatActivity {
             mLocationClient.stopLocation();
             mLocationClient.startLocation();
         }
+
+        // UI sub Thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    Message message = mHandler.obtainMessage();
+                    message.what = 1;
+                    String sendMessge = MessageQueue.getFirstMessage();
+                    if (sendMessge == "") {
+                        message.obj = "There is not any message to send"
+                        ;
+                    } else {
+                        message.obj = "The next message to send: " + sendMessge;
+                    }
+                    mHandler.sendMessage(message);
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
+
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            mTextMessage.setText((String)msg.obj);
+        }
+    };
 
     private Notification buildNotification() {
         Notification.Builder builder = null;
