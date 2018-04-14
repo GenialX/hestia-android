@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setInterval(2000);
+        mLocationOption.setInterval(60000);
 
         if(null != mLocationClient){
             mLocationClient.setLocationOption(mLocationOption);
@@ -97,12 +97,18 @@ public class MainActivity extends AppCompatActivity {
                     Message message = mHandler.obtainMessage();
                     message.what = 1;
                     String sendMessge = MessageQueue.getFirstMessage();
+                    // Server Thread status
+                    message.obj = "The status of Server Thread: " + ServerThread.doWorking() + "\n\n";
+                    // UI sub-Thread status
+                    message.obj += "The status of UI sub-Thread: true" + "\n\n";
+                    // Message to send
                     if (sendMessge == "") {
-                        message.obj = "There is not any message to send"
+                        message.obj += "There is not any message in queue to send" + "\n\n";
                         ;
                     } else {
-                        message.obj = "The next message to send: " + sendMessge;
+                        message.obj += "The next message to send: " + sendMessge + "\n\n";
                     }
+                    message.obj += "Pretending to be mysterious: " + Math.random() + "\n\n";
                     mHandler.sendMessage(message);
                     try {
                         Thread.sleep(300);
