@@ -20,7 +20,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.ihuxu.hestia_android.libs.server.MessageQueue;
-import com.ihuxu.hestia_android.libs.server.ServerThread;
+import com.ihuxu.hestia_android.libs.server.ServerReadThread;
+import com.ihuxu.hestia_android.libs.server.ServerWriteThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Server Thread to send location to server
-        new ServerThread().start();
+        // Server Thread
+        new ServerWriteThread().start();
+        new ServerReadThread().start();
 
         // Location
         mLocationListener = new AMapLocationListener() {
@@ -93,12 +95,13 @@ public class MainActivity extends AppCompatActivity {
         // UI sub Thread
         new Thread(new Runnable() {
             public void run() {
+                String lastInMessage = "";
                 while (true) {
                     Message message = mHandler.obtainMessage();
                     message.what = 1;
                     String sendMessge = MessageQueue.getFirstMessage();
                     // Server Thread status
-                    message.obj = "The status of Server Thread: " + ServerThread.doWorking() + "\n\n";
+                    message.obj = "The status of Server Thread: " + ServerReadThread.doWorking() + "\n\n";
                     // UI sub-Thread status
                     message.obj += "The status of UI sub-Thread: true" + "\n\n";
                     // Message to send
@@ -108,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         message.obj += "The next message to send: " + sendMessge + "\n\n";
                     }
+                    // Home Device Info
+                    if (MessageQueue.getFirstInMessage() != "") {
+                        lastInMessage = MessageQueue.popInMessage();
+                    }
+                    message.obj += "The home device info:" + lastInMessage + "\n\n";
                     message.obj += "Pretending to be mysterious: " + Math.random() + "\n\n";
                     mHandler.sendMessage(message);
                     try {
