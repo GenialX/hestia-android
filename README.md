@@ -20,4 +20,4 @@ DEMO
 [Hestia Server](https://github.com/GenialX/hestia-server)
 
 ## CHANGE LOG
-[See more at here](https://github.com/GenialX/hestia-android/blob/master/CHANGE_LOG)
+[See more at here](https://github.com/GenialX/hestia-android/blob/master/CHANGE_LOG.md)
