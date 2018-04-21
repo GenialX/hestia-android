@@ -12,10 +12,6 @@ public class ServerWriteThread extends Thread {
             doWorking = true;
         }
 
-        // Write client key to server
-        String clientKeyMessage = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1001,\"client_key\":\"mobile_client_key\",\"token\":\"aaabbbccc\"}}";
-        Server.getInstance().writeLine(clientKeyMessage);
-
         int i = 0;
         while (doWorking) {
             try {

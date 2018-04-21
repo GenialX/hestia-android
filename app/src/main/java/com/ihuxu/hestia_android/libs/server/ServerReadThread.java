@@ -13,12 +13,6 @@ public class ServerReadThread extends Thread {
         }
 
         while (doWorking) {
-            try {
-                // @TODO multi-thread may be there are two server socket created.
-                this.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             Log.i("ServerReadThread", "Do work...");
             // Read message from server
 

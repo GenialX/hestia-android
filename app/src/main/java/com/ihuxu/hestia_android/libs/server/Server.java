@@ -32,20 +32,29 @@ public class Server {
             InputStream inputStream = this.socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             this.bufferedReader = new BufferedReader(inputStreamReader);
+
+            // Write client key to server
+            String clientKeyMessage = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1001,\"client_key\":\"mobile_client_key\",\"token\":\"aaabbbccc\"}}";
+            this.writeLine(clientKeyMessage);
+
+            Thread.sleep(10000);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static Server getInstance() {
+    public synchronized static Server getInstance() {
+        Log.d("Server", "getInstance");
         if (Server.instance == null) {
             Server.instance = new Server();
         }
        return Server.instance;
     }
 
-    public void writeLine(String line) {
+    public synchronized void writeLine(String line) {
         Log.d("Server", "Server write line:" + line);
         try {
             this.bufferedWriter.write(line);
@@ -64,6 +73,7 @@ public class Server {
     }
 
     public String readLine() {
+        Log.d("Server", "readLine");
         try {
             return this.bufferedReader.readLine();
         } catch (IOException e) {
@@ -88,7 +98,15 @@ public class Server {
             InputStream inputStream = this.socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             this.bufferedReader = new BufferedReader(inputStreamReader);
+
+            // Write client key to server
+            String clientKeyMessage = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1001,\"client_key\":\"mobile_client_key\",\"token\":\"aaabbbccc\"}}";
+            this.writeLine(clientKeyMessage);
+
+            Thread.sleep(10000);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
