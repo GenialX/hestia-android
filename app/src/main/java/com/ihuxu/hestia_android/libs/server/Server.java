@@ -87,7 +87,6 @@ public class Server {
                 e1.printStackTrace();
             }
             rebuildServer();
-        } finally {
             return null;
         }
     }
