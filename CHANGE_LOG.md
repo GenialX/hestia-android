@@ -1,1 +1,2 @@
+- [BUG] retry to connect to server while server down at 2018.04.22
 - [BUG] fix bug of using the server(connenting to server) instance resource concurrently in the multi-thread case, [commit here](https://github.com/GenialX/hestia-android/commit/beeda6e1dd79f91ae92fe5564b21904d56721fe7) at 2018.04.21
