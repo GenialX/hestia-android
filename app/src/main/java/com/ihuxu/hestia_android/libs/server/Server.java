@@ -60,31 +60,35 @@ public class Server {
             this.bufferedWriter.write(line);
             this.bufferedWriter.newLine();
             this.bufferedWriter.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            rebuildServer();
             try {
-                this.bufferedWriter.write(line);
-                this.bufferedWriter.newLine();
-            } catch (IOException e1) {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+            rebuildServer();
         }
     }
 
     public String readLine() {
         Log.d("Server", "readLine");
         try {
-            return this.bufferedReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            rebuildServer();
-            try {
-                return this.bufferedReader.readLine();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return "";
+            String message = this.bufferedReader.readLine();
+            if (message == null) {
+                throw new Exception("readLine return null");
             }
+            return message;
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            rebuildServer();
+        } finally {
+            return null;
         }
     }
 
@@ -103,7 +107,7 @@ public class Server {
             String clientKeyMessage = "{\"errno\":0,\"errmsg\":\"successfully\",\"data\":{\"message_type\":1001,\"client_key\":\"mobile_client_key\",\"token\":\"aaabbbccc\"}}";
             this.writeLine(clientKeyMessage);
 
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

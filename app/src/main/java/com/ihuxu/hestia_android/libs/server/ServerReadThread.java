@@ -18,7 +18,9 @@ public class ServerReadThread extends Thread {
 
             String message = Server.getInstance().readLine();
             Log.i("ServerReadThread", "Read message:" + message);
-            MessageQueue.pushInMessage(message);
+            if (message != null) {
+                MessageQueue.pushInMessage(message);
+            }
         }
     }
 
